@@ -15,8 +15,10 @@ export default function BookCard({ book }: BookCardProps) {
           <Image
             src={book.coverImage}
             alt={`Cover of ${book.title}`}
-            layout="fill"
-            objectFit="contain"
+            fill={true}
+            style={{ objectFit: 'contain' }}
+            sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            priority={book.id === '1' || book.id === '2' || book.id === '3' || book.id === '4'} // Prioritize loading for first few books
             data-ai-hint={book.dataAiHint || "book cover"}
           />
         </div>

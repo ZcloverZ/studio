@@ -66,15 +66,15 @@ export default function CheckoutPage() {
             <form onSubmit={handleSubmitOrder} className="space-y-4">
               <div>
                 <Label htmlFor="name">نام و نام خانوادگی</Label>
-                <Input id="name" type="text" value={formData.name} onChange={handleInputChange} required className="bg-white"/>
+                <Input id="name" type="text" value={formData.name} onChange={handleInputChange} required />
               </div>
               <div>
                 <Label htmlFor="email">ایمیل</Label>
-                <Input id="email" type="email" value={formData.email} onChange={handleInputChange} required className="bg-white"/>
+                <Input id="email" type="email" value={formData.email} onChange={handleInputChange} required />
               </div>
               <div>
                 <Label htmlFor="address">آدرس</Label>
-                <Input id="address" type="text" value={formData.address} onChange={handleInputChange} required className="bg-white"/>
+                <Input id="address" type="text" value={formData.address} onChange={handleInputChange} required />
               </div>
               <Button type="submit" size="lg" className="w-full mt-6 bg-primary hover:bg-primary/90 text-primary-foreground" disabled={itemCount === 0}>
                 ثبت سفارش

@@ -1,9 +1,11 @@
+
 export interface Book {
   id: string;
   title: string;
   author: string;
   isbn: string;
   coverImage: string;
+  dataAiHint?: string; // Added optional dataAiHint for placeholder images
   price: number;
   description: string;
   genre: string;

@@ -24,8 +24,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fa" dir="rtl">
-      <body className={`${vazirmatn.variable} font-sans antialiased`}>
+    <html lang="fa" dir="rtl" className={vazirmatn.variable}>
+      <body className={`font-sans antialiased`}>
         <CartProvider>
           <div className="flex flex-col min-h-screen bg-background">
             <Header />

@@ -1,13 +1,22 @@
+
 'use client';
 
 import Link from 'next/link';
 import { ShoppingCart } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
+import { useState, useEffect } from 'react';
 
 export default function Header() {
   const { getItemCount } = useCart();
-  const itemCount = getItemCount();
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
+  // Get itemCount after hasMounted is true to ensure client-side value
+  const itemCount = hasMounted ? getItemCount() : 0;
 
   return (
     <header className="bg-card text-card-foreground shadow-md sticky top-0 z-50">
@@ -22,9 +31,9 @@ export default function Header() {
           <Link href="/cart" passHref>
             <Button variant="ghost" className="relative text-card-foreground hover:bg-accent/20">
               <ShoppingCart className="h-6 w-6" />
-              {itemCount > 0 && (
+              {hasMounted && itemCount > 0 && (
                 <span className="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 bg-primary text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  {itemCount}
+                  {itemCount.toLocaleString('fa-IR')}
                 </span>
               )}
               <span className="sr-only">سبد خرید</span>

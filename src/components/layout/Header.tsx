@@ -2,9 +2,9 @@
 'use client';
 
 import Link from 'next/link';
-import { ShoppingCart, ChevronDown, Sun, Moon } from 'lucide-react'; // Added Sun and Moon icons
+import { ShoppingCart, ChevronDown, Sun, Moon } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
-import { useTheme } from '@/contexts/ThemeContext'; // Added useTheme hook
+import { useTheme } from '@/contexts/ThemeContext';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -25,7 +25,7 @@ const genres = [
 
 export default function Header() {
   const { getItemCount } = useCart();
-  const { theme, toggleTheme } = useTheme(); // Destructure theme and toggleTheme
+  const { theme, toggleTheme } = useTheme();
   const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
@@ -35,16 +35,16 @@ export default function Header() {
   const itemCount = hasMounted ? getItemCount() : 0;
 
   return (
-    <header className="bg-card text-card-foreground shadow-md sticky top-0 z-50">
+    <header className="bg-background text-foreground shadow-md sticky top-0 z-50 border-b border-border">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <Link href="/" className="text-2xl font-bold text-primary hover:text-primary/80 transition-colors">
           Ketab Online
         </Link>
-        <nav className="flex items-center space-x-1 rtl:space-x-reverse"> {/* Reduced space for theme toggle */}
+        <nav className="flex items-center space-x-1 rtl:space-x-reverse">
           <Link href="/" passHref>
             <Button
               variant="ghost"
-              className="text-card-foreground hover:text-primary hover:bg-primary/10 focus-visible:text-primary focus-visible:bg-primary/10 focus-visible:ring-1 focus-visible:ring-primary/70 transition-colors duration-150"
+              className="text-foreground hover:text-primary hover:bg-primary/10 focus-visible:text-primary focus-visible:bg-primary/10 focus-visible:ring-1 focus-visible:ring-primary/70 transition-colors duration-150"
             >
               خانه
             </Button>
@@ -54,7 +54,7 @@ export default function Header() {
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
-                className="text-card-foreground hover:text-primary hover:bg-primary/10 focus-visible:text-primary focus-visible:bg-primary/10 focus-visible:ring-1 focus-visible:ring-primary/70 transition-colors duration-150"
+                className="text-foreground hover:text-primary hover:bg-primary/10 focus-visible:text-primary focus-visible:bg-primary/10 focus-visible:ring-1 focus-visible:ring-primary/70 transition-colors duration-150"
               >
                 ژانرها
                 <ChevronDown className="me-2 h-4 w-4" />
@@ -74,7 +74,7 @@ export default function Header() {
           <Link href="/cart" passHref>
             <Button
               variant="ghost"
-              className="relative text-card-foreground hover:text-primary hover:bg-primary/10 focus-visible:text-primary focus-visible:bg-primary/10 focus-visible:ring-1 focus-visible:ring-primary/70 transition-colors duration-150"
+              className="relative text-foreground hover:text-primary hover:bg-primary/10 focus-visible:text-primary focus-visible:bg-primary/10 focus-visible:ring-1 focus-visible:ring-primary/70 transition-colors duration-150"
               aria-label="سبد خرید"
             >
               <ShoppingCart className="h-5 w-5" />
@@ -93,7 +93,7 @@ export default function Header() {
               variant="ghost"
               size="icon"
               onClick={toggleTheme}
-              className="text-card-foreground hover:text-primary hover:bg-primary/10 focus-visible:text-primary focus-visible:bg-primary/10 focus-visible:ring-1 focus-visible:ring-primary/70 transition-colors duration-150 h-9 w-9" // Adjusted size to match other buttons better
+              className="text-foreground hover:text-primary hover:bg-primary/10 focus-visible:text-primary focus-visible:bg-primary/10 focus-visible:ring-1 focus-visible:ring-primary/70 transition-colors duration-150 h-9 w-9"
               aria-label={theme === 'light' ? "تغییر به تم تاریک" : "تغییر به تم روشن"}
             >
               {theme === 'light' ? (

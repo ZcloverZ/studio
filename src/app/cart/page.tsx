@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -6,6 +7,7 @@ import CartItemCard from '@/components/cart/CartItemCard';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { ShoppingBag, ArrowRight } from 'lucide-react';
 
 export default function CartPage() {
   const { cartItems, getCartTotal, clearCart, getItemCount } = useCart();
@@ -14,11 +16,17 @@ export default function CartPage() {
 
   if (itemCount === 0) {
     return (
-      <div className="text-center py-10">
-        <h1 className="text-3xl font-bold mb-4">سبد خرید شما خالی است</h1>
-        <p className="text-muted-foreground mb-6">به نظر می رسد هنوز کتابی به سبد خرید خود اضافه نکرده اید.</p>
+      <div className="flex flex-col items-center justify-center text-center py-20 min-h-[calc(100vh-20rem)]">
+        <ShoppingBag className="w-20 h-20 text-muted-foreground mb-8" />
+        <h1 className="text-3xl font-bold mb-4">سبد خرید شما خالی است!</h1>
+        <p className="text-lg text-muted-foreground mb-8 max-w-md">
+          به نظر می‌رسد هنوز کتابی به سبد خرید خود اضافه نکرده‌اید. نگاهی به کتاب‌های ما بیندازید!
+        </p>
         <Link href="/" passHref>
-          <Button size="lg">بازگشت به فروشگاه</Button>
+          <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
+            <ArrowRight className="ms-2 h-5 w-5" />
+            مشاهده کتاب‌ها
+          </Button>
         </Link>
       </div>
     );

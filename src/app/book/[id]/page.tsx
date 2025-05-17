@@ -7,7 +7,7 @@ import AddToCartButton from '@/components/books/AddToCartButton';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { ArrowRight, BookOpen, FileText, Tag, Info } from 'lucide-react';
+import { ArrowRight, BookOpen, FileText, Tag, Info, AlertTriangle } from 'lucide-react';
 
 export async function generateStaticParams() {
   return books.map((book) => ({
@@ -20,11 +20,14 @@ export default function BookDetailPage({ params }: { params: { id: string } }) {
 
   if (!book) {
     return (
-      <div className="text-center py-10">
-        <h1 className="text-3xl font-bold mb-4 text-destructive">کتاب مورد نظر یافت نشد</h1>
-        <p className="text-muted-foreground mb-6">متاسفانه کتابی با این مشخصات در فروشگاه ما موجود نیست.</p>
+      <div className="flex flex-col items-center justify-center text-center py-20 min-h-[calc(100vh-20rem)]">
+        <AlertTriangle className="w-16 h-16 text-destructive mb-6" />
+        <h1 className="text-3xl font-bold mb-4 text-destructive">کتاب مورد نظر یافت نشد!</h1>
+        <p className="text-muted-foreground mb-8 max-w-md">
+          متاسفانه کتابی با این مشخصات در فروشگاه ما موجود نیست. ممکن است آدرس را اشتباه وارد کرده باشید یا کتاب از فهرست ما حذف شده باشد.
+        </p>
         <Link href="/" passHref>
-          <Button>
+          <Button size="lg">
             <ArrowRight className="ms-2 h-4 w-4" />
             بازگشت به صفحه اصلی
           </Button>

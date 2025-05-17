@@ -1,6 +1,7 @@
+
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
@@ -8,7 +9,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { useToast } from "@/hooks/use-toast";
-import { useRouter } from 'next/navigation'; // For redirecting
+import { useRouter } from 'next/navigation';
+import { ShoppingCart, AlertCircle } from 'lucide-react';
 
 export default function CheckoutPage() {
   const { cartItems, getCartTotal, clearCart, getItemCount } = useCart();
@@ -19,6 +21,11 @@ export default function CheckoutPage() {
     address: '',
     email: '',
   });
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const total = getCartTotal();
   const itemCount = getItemCount();
@@ -29,6 +36,14 @@ export default function CheckoutPage() {
 
   const handleSubmitOrder = (e: React.FormEvent) => {
     e.preventDefault();
+    if (itemCount === 0) {
+      toast({
+        title: "خطا در ثبت سفارش",
+        description: "سبد خرید شما خالی است. لطفاً ابتدا کتابی به سبد خرید خود اضافه کنید.",
+        variant: "destructive",
+      });
+      return;
+    }
     // Mock order submission
     console.log('Order submitted:', { formData, cartItems, total });
     
@@ -36,17 +51,33 @@ export default function CheckoutPage() {
     toast({
       title: "سفارش شما ثبت شد!",
       description: "از خرید شما متشکریم. سفارش شما با موفقیت پردازش شد.",
-      variant: "default", // 'default' will use accent color based on theme
+      variant: "default",
     });
-    router.push('/'); // Redirect to homepage
+    router.push('/'); 
   };
 
-  if (itemCount === 0 && !router) { // Check router to avoid issues during initial render before redirect
+  // This check ensures that we don't try to redirect or show empty cart message before client has loaded cart state
+  if (!isClient) {
     return (
-      <div className="text-center py-10">
-        <h1 className="text-3xl font-bold mb-4">سبد خرید شما برای تسویه حساب خالی است.</h1>
+       <div className="flex flex-col items-center justify-center text-center py-20 min-h-[calc(100vh-20rem)]">
+        <ShoppingCart className="w-16 h-16 text-muted-foreground mb-6 animate-pulse" />
+        <p className="text-lg text-muted-foreground">در حال بارگذاری اطلاعات تسویه حساب...</p>
+      </div>
+    );
+  }
+
+  if (itemCount === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center text-center py-20 min-h-[calc(100vh-20rem)]">
+        <AlertCircle className="w-16 h-16 text-destructive mb-6" />
+        <h1 className="text-3xl font-bold mb-4">سبد خرید شما خالی است</h1>
+        <p className="text-muted-foreground mb-8 max-w-md">
+          برای ادامه به صفحه تسویه حساب، ابتدا باید کتابی به سبد خرید خود اضافه کنید.
+        </p>
         <Link href="/" passHref>
-          <Button size="lg">بازگشت به فروشگاه</Button>
+          <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
+            بازگشت به فروشگاه
+          </Button>
         </Link>
       </div>
     );
@@ -66,17 +97,22 @@ export default function CheckoutPage() {
             <form onSubmit={handleSubmitOrder} className="space-y-4">
               <div>
                 <Label htmlFor="name">نام و نام خانوادگی</Label>
-                <Input id="name" type="text" value={formData.name} onChange={handleInputChange} required />
+                <Input id="name" type="text" value={formData.name} onChange={handleInputChange} required className="bg-background/80 focus:bg-background" />
               </div>
               <div>
                 <Label htmlFor="email">ایمیل</Label>
-                <Input id="email" type="email" value={formData.email} onChange={handleInputChange} required />
+                <Input id="email" type="email" value={formData.email} onChange={handleInputChange} required className="bg-background/80 focus:bg-background" />
               </div>
               <div>
                 <Label htmlFor="address">آدرس</Label>
-                <Input id="address" type="text" value={formData.address} onChange={handleInputChange} required />
+                <Input id="address" type="text" value={formData.address} onChange={handleInputChange} required className="bg-background/80 focus:bg-background" />
               </div>
-              <Button type="submit" size="lg" className="w-full mt-6 bg-primary hover:bg-primary/90 text-primary-foreground" disabled={itemCount === 0}>
+              <Button 
+                type="submit" 
+                size="lg" 
+                className="w-full mt-6 bg-primary hover:bg-primary/90 text-primary-foreground" 
+                disabled={itemCount === 0}
+              >
                 ثبت سفارش
               </Button>
             </form>

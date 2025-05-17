@@ -8,28 +8,28 @@
     --foreground: 70 67% 91%; /* Light Yellowish Cream #F5F9D7 */
 
     --card: 48 11% 86%; /* Light Grayish Beige #DDDCD7 */
-    --card-foreground: 0 0% 11%; /* Very Dark Gray #1B1B1B */
+    --card-foreground: 0 0% 11%; /* Very Dark Gray #1B1B1B for text on light cards */
 
-    --popover: 0 0% 11%; /* Very Dark Gray #1B1B1B */
-    --popover-foreground: 70 67% 91%; /* Light Yellowish Cream #F5F9D7 */
+    --popover: 0 0% 11%; /* Very Dark Gray #1B1B1B for popovers in dark theme */
+    --popover-foreground: 70 67% 91%; /* Light Yellowish Cream #F5F9D7 for text on dark popovers */
 
     --primary: 131 33% 69%; /* Muted Green #99C9A2 */
-    --primary-foreground: 0 0% 11%; /* Very Dark Gray #1B1B1B for contrast */
+    --primary-foreground: 0 0% 11%; /* Very Dark Gray #1B1B1B for text on primary buttons */
 
     --secondary: 321 56% 74%; /* Pinkish #E499C4 */
-    --secondary-foreground: 0 0% 11%; /* Very Dark Gray #1B1B1B for contrast */
+    --secondary-foreground: 0 0% 11%; /* Very Dark Gray #1B1B1B for text on secondary buttons */
 
-    --muted: 0 0% 66%; /* Medium Gray #A8A7A7 */
-    --muted-foreground: 0 0% 45%; /* Darker Gray #737373 for muted text */
+    --muted: 0 0% 20%; /* Darker Gray #333333 for muted backgrounds in dark theme */
+    --muted-foreground: 0 0% 66%; /* Medium Gray #A8A7A7 for text on dark muted backgrounds */
 
     --accent: 131 33% 69%; /* Muted Green #99C9A2, same as primary */
-    --accent-foreground: 0 0% 11%; /* Very Dark Gray #1B1B1B */
+    --accent-foreground: 0 0% 11%; /* Very Dark Gray #1B1B1B for text on accent elements */
 
     --destructive: 0 84.2% 60.2%; /* Default Red */
-    --destructive-foreground: 0 0% 98%; /* Default Light */
+    --destructive-foreground: 0 0% 98%; /* Default Light text for destructive elements */
 
-    --border: 0 0% 66%; /* Medium Gray #A8A7A7 */
-    --input: 0 0% 66%; /* Medium Gray #A8A7A7 */
+    --border: 0 0% 25%; /* Dark Gray #404040 for borders in dark theme */
+    --input: 0 0% 25%; /* Dark Gray #404040 for input borders/backgrounds in dark theme */
     --ring: 69 88% 77%; /* Light Lime Green #ECF791 for focus rings */
     
     --chart-1: 12 76% 61%;
@@ -39,7 +39,7 @@
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
 
-    /* Sidebar colors adjusted to be harmonious with the new theme */
+    /* Sidebar colors for the default dark theme (light sidebar on dark app background) */
     --sidebar-background: 48 11% 86%; /* Light Grayish Beige #DDDCD7 */
     --sidebar-foreground: 0 0% 11%; /* Very Dark Gray #1B1B1B */
     --sidebar-primary: 131 33% 69%; /* Muted Green #99C9A2 */
@@ -51,39 +51,50 @@
   }
 
   .dark {
-    /* These are the alternative dark mode variables if .dark class is applied */
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
+    /* Light theme variables (when .dark class is applied) */
+    --background: 70 67% 91%; /* Light Yellowish Cream #F5F9D7 */
+    --foreground: 0 0% 11%; /* Very Dark Gray #1B1B1B */
+
+    --card: 0 0% 100%; /* White #FFFFFF */
+    --card-foreground: 0 0% 11%; /* Very Dark Gray #1B1B1B */
+
+    --popover: 0 0% 100%; /* White #FFFFFF */
+    --popover-foreground: 0 0% 11%; /* Very Dark Gray #1B1B1B */
+
+    --primary: 131 33% 69%; /* Muted Green #99C9A2 */
+    --primary-foreground: 0 0% 11%; /* Very Dark Gray #1B1B1B for text on primary buttons */
+
+    --secondary: 321 56% 74%; /* Pinkish #E499C4 */
+    --secondary-foreground: 0 0% 11%; /* Very Dark Gray #1B1B1B for text on secondary buttons */
+
+    --muted: 0 0% 94%; /* Very Light Gray #F0F0F0 for muted backgrounds */
+    --muted-foreground: 0 0% 40%; /* Darker Gray #666666 for text on light muted backgrounds */
+
+    --accent: 131 33% 69%; /* Muted Green #99C9A2 */
+    --accent-foreground: 0 0% 11%; /* Very Dark Gray #1B1B1B */
+
+    --destructive: 0 84.2% 60.2%; /* Default Red */
+    --destructive-foreground: 0 0% 98%; /* Default Light text */
+
+    --border: 0 0% 87%; /* Light Gray #DDDEDD for borders */
+    --input: 0 0% 87%; /* Light Gray #DDDEDD for input borders/backgrounds */
+    --ring: 131 33% 60%; /* Darker Muted Green #8ABF93 for focus rings in light theme */
+    
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Sidebar colors for the light theme */
+    --sidebar-background: 0 0% 98%; /* Almost White #FAFAFA */
+    --sidebar-foreground: 0 0% 11%; /* Very Dark Gray #1B1B1B */
+    --sidebar-primary: 131 33% 69%; /* Muted Green #99C9A2 */
+    --sidebar-primary-foreground: 0 0% 11%; /* Very Dark Gray #1B1B1B */
+    --sidebar-accent: 321 56% 74%; /* Pinkish #E499C4 */
+    --sidebar-accent-foreground: 0 0% 11%; /* Very Dark Gray #1B1B1B */
+    --sidebar-border: 0 0% 87%; /* Light Gray #DDDEDD */
+    --sidebar-ring: 131 33% 60%; /* Darker Muted Green #8ABF93 */
   }
 }
 

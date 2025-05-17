@@ -2,7 +2,8 @@
 'use client';
 
 import Link from 'next/link';
-import { ShoppingCart, ChevronDown, Sun, Moon, Menu, Home as HomeIcon, BookOpen } from 'lucide-react';
+import { useRouter } from 'next/navigation'; // Added for search redirection
+import { ShoppingCart, ChevronDown, Sun, Moon, Menu, Home as HomeIcon, BookOpen, Search } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { Button } from '@/components/ui/button';
@@ -26,6 +27,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import SearchBar from '@/components/books/SearchBar'; // Added SearchBar import
 import { useState, useEffect } from 'react';
 
 const genres = [
@@ -40,6 +42,7 @@ const genres = [
 export default function Header() {
   const { getItemCount } = useCart();
   const { theme, toggleTheme } = useTheme();
+  const router = useRouter(); // Added for search
   const [hasMounted, setHasMounted] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -49,10 +52,16 @@ export default function Header() {
 
   const itemCount = hasMounted ? getItemCount() : 0;
 
+  const handleHeaderSearch = (query: string) => {
+    router.push(`/?search=${encodeURIComponent(query)}`);
+    if (isMobileMenuOpen) {
+      setIsMobileMenuOpen(false); // Close mobile menu on search
+    }
+  };
+
   const navButtonClassName = "text-foreground hover:text-primary hover:bg-primary/10 focus-visible:text-primary focus-visible:bg-primary/10 focus-visible:ring-1 focus-visible:ring-primary/70 transition-colors duration-150";
   const mobileNavLinkClassName = "flex items-center w-full p-3 text-lg hover:bg-muted rounded-md transition-colors";
   const mobileNavIconClassName = "ms-3 h-5 w-5";
-
 
   return (
     <header className="bg-background text-foreground shadow-md sticky top-0 z-50 border-b border-border">
@@ -61,33 +70,40 @@ export default function Header() {
           Ketab Online
         </Link>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-1 rtl:space-x-reverse">
-          <Link href="/" passHref>
-            <Button variant="ghost" className={navButtonClassName}>
-              خانه
-            </Button>
-          </Link>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+        {/* Desktop Navigation & Search */}
+        <div className="hidden md:flex items-center space-x-1 rtl:space-x-reverse flex-grow justify-center">
+          <nav className="flex items-center space-x-1 rtl:space-x-reverse">
+            <Link href="/" passHref>
               <Button variant="ghost" className={navButtonClassName}>
-                ژانرها
-                <ChevronDown className="me-2 h-4 w-4" />
+                خانه
               </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="bg-card text-card-foreground">
-              {genres.map((genre) => (
-                <DropdownMenuItem key={genre.slug} asChild>
-                  <Link href={`/genre/${genre.slug}`} className="hover:!bg-primary/20 focus:!bg-primary/20 w-full text-right">
-                    {genre.name}
-                  </Link>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+            </Link>
 
-          <Link href="/cart" passHref>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className={navButtonClassName}>
+                  ژانرها
+                  <ChevronDown className="me-2 h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="bg-card text-card-foreground">
+                {genres.map((genre) => (
+                  <DropdownMenuItem key={genre.slug} asChild>
+                    <Link href={`/genre/${genre.slug}`} className="hover:!bg-primary/20 focus:!bg-primary/20 w-full text-right">
+                      {genre.name}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </nav>
+          <div className="mx-4 flex-grow max-w-md">
+            <SearchBar onSearch={handleHeaderSearch} />
+          </div>
+        </div>
+
+        <div className="hidden md:flex items-center space-x-1 rtl:space-x-reverse">
+           <Link href="/cart" passHref>
             <Button variant="ghost" className={`relative ${navButtonClassName}`} aria-label="سبد خرید">
               <ShoppingCart className="h-5 w-5" />
               {hasMounted && itemCount > 0 && (
@@ -111,10 +127,35 @@ export default function Header() {
               <span className="sr-only">تغییر تم</span>
             </Button>
           )}
-        </nav>
+        </div>
+
 
         {/* Mobile Navigation Trigger */}
-        <div className="md:hidden">
+        <div className="md:hidden flex items-center space-x-2 rtl:space-x-reverse">
+            {/* Mobile Cart Icon */}
+            <Link href="/cart" passHref>
+                <Button variant="ghost" size="icon" className={`relative ${navButtonClassName}`} aria-label="سبد خرید">
+                <ShoppingCart className="h-5 w-5" />
+                {hasMounted && itemCount > 0 && (
+                    <span className="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 bg-primary text-primary-foreground text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                    {itemCount.toLocaleString('fa-IR')}
+                    </span>
+                )}
+                <span className="sr-only">سبد خرید</span>
+                </Button>
+            </Link>
+            {/* Mobile Theme Toggle */}
+            {hasMounted && (
+                 <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={toggleTheme}
+                    className={`${navButtonClassName} h-9 w-9`}
+                    aria-label={theme === 'light' ? "تغییر به تم تاریک" : "تغییر به تم روشن"}
+                >
+                    {theme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
+                </Button>
+            )}
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className={navButtonClassName}>
@@ -127,6 +168,10 @@ export default function Header() {
                 <SheetTitle className="text-xl text-primary text-right">منو</SheetTitle>
               </SheetHeader>
               <nav className="flex flex-col space-y-2 p-4">
+                <div className="mb-4">
+                  <SearchBar onSearch={handleHeaderSearch} />
+                </div>
+
                 <SheetClose asChild>
                   <Link href="/" className={mobileNavLinkClassName}>
                     <HomeIcon className={mobileNavIconClassName} />
@@ -154,36 +199,8 @@ export default function Header() {
                   </AccordionItem>
                 </Accordion>
 
-                <SheetClose asChild>
-                  <Link href="/cart" className={`${mobileNavLinkClassName} relative`}>
-                    <ShoppingCart className={mobileNavIconClassName} />
-                    <span>سبد خرید</span>
-                    {hasMounted && itemCount > 0 && (
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2 bg-primary text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                        {itemCount.toLocaleString('fa-IR')}
-                      </span>
-                    )}
-                  </Link>
-                </SheetClose>
-                
-                <div className="pt-4">
-                    <Button
-                        variant="outline"
-                        onClick={() => {
-                            toggleTheme();
-                            // setIsMobileMenuOpen(false); // Optional: close menu on theme change
-                        }}
-                        className="w-full justify-start p-3 text-lg"
-                    >
-                        {theme === 'light' ? 
-                            <Moon className={`${mobileNavIconClassName} text-foreground`} /> : 
-                            <Sun className={`${mobileNavIconClassName} text-foreground`} />
-                        }
-                        <span className="text-foreground">
-                            {theme === 'light' ? 'تغییر به تم تاریک' : 'تغییر به تم روشن'}
-                        </span>
-                    </Button>
-                </div>
+                {/* Cart link is now outside mobile menu for direct access */}
+                {/* Theme toggle is now outside mobile menu for direct access */}
 
               </nav>
             </SheetContent>

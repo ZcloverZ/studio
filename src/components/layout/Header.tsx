@@ -51,11 +51,11 @@ export default function Header() {
     setHasMounted(true);
 
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10); // Threshold of 10px
+      setIsScrolled(window.scrollY > 10);
     };
 
     window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Check scroll position on initial load
+    handleScroll(); 
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
@@ -67,7 +67,7 @@ export default function Header() {
   const handleHeaderSearch = (query: string) => {
     router.push(`/?search=${encodeURIComponent(query)}`);
     if (isMobileMenuOpen) {
-      setIsMobileMenuOpen(false); // Close mobile menu on search
+      setIsMobileMenuOpen(false); 
     }
   };
 
@@ -142,10 +142,10 @@ export default function Header() {
         </div>
 
 
-        {/* Mobile Navigation Trigger */}
+        {/* Mobile Navigation Trigger & Content */}
         <div className="md:hidden flex items-center space-x-2 rtl:space-x-reverse">
             <Link href="/cart" passHref>
-                <Button variant="ghost" size="icon" className={`relative ${navButtonClassName}`} aria-label="سبد خرید">
+                <Button variant="ghost" size="icon" className={`relative ${navButtonClassName} h-9 w-9`} aria-label="سبد خرید">
                 <ShoppingCart className="h-5 w-5" />
                 {hasMounted && itemCount > 0 && (
                     <span className="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 bg-primary text-primary-foreground text-xs rounded-full h-4 w-4 flex items-center justify-center">
@@ -160,7 +160,7 @@ export default function Header() {
                     variant="ghost"
                     size="icon"
                     onClick={toggleTheme}
-                    className={navButtonClassName}
+                    className={`${navButtonClassName} h-9 w-9`}
                     aria-label={theme === 'light' ? "تغییر به تم تاریک" : "تغییر به تم روشن"}
                 >
                     {theme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
@@ -168,20 +168,21 @@ export default function Header() {
             )}
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className={navButtonClassName}>
+              <Button variant="ghost" size="icon" className={`${navButtonClassName} h-9 w-9`}>
                 <Menu className="h-5 w-5" />
                 <span className="sr-only">باز کردن منو</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[280px] sm:w-[320px] bg-background p-0">
-              <SheetHeader className="p-4 border-b">
+            <SheetContent side="right" className="w-[280px] sm:w-[320px] bg-background p-0 flex flex-col">
+              <SheetHeader className="p-4 border-b shrink-0">
                 <SheetTitle className="text-xl text-primary text-right">منو</SheetTitle>
               </SheetHeader>
-              <nav className="flex flex-col space-y-2 p-4">
-                <div className="mb-4">
-                  <SearchBar onSearch={handleHeaderSearch} />
-                </div>
+              
+              <div className="p-4 border-b shrink-0">
+                <SearchBar onSearch={handleHeaderSearch} />
+              </div>
 
+              <nav className="flex flex-col space-y-2 p-4 overflow-y-auto flex-grow">
                 <SheetClose asChild>
                   <Link href="/" className={mobileNavLinkClassName}>
                     <HomeIcon className={mobileNavIconClassName} />

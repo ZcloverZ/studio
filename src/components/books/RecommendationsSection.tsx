@@ -8,14 +8,14 @@ import BookCard from './BookCard';
 import { books as allBooks } from '@/lib/data';
 import { Skeleton } from '@/components/ui/skeleton';
 
+// Mock data for history - in a real app, this would be dynamic
+const browsingHistory = "The Great Gatsby, To Kill a Mockingbird";
+const purchaseHistory = "1984";
+
 export default function RecommendationsSection() {
   const [recommendedBooks, setRecommendedBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  // Mock data for history - in a real app, this would be dynamic
-  const browsingHistory = "The Great Gatsby, To Kill a Mockingbird";
-  const purchaseHistory = "1984";
 
   useEffect(() => {
     async function fetchRecs() {
@@ -46,8 +46,7 @@ export default function RecommendationsSection() {
       }
     }
     fetchRecs();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Empty dependency array to run once on mount
+  }, []); // browsingHistory and purchaseHistory are module-level constants, so no need to include them in deps.
 
   if (loading) {
     return (

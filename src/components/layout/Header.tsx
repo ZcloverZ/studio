@@ -2,10 +2,25 @@
 'use client';
 
 import Link from 'next/link';
-import { ShoppingCart } from 'lucide-react';
+import { ShoppingCart, ChevronDown } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useState, useEffect } from 'react';
+
+const genres = [
+  { name: 'داستانی', slug: 'Fiction' },
+  { name: 'غیرداستانی', slug: 'Non-Fiction' },
+  { name: 'کلاسیک', slug: 'Classic' },
+  { name: 'ویران‌شهری', slug: 'Dystopian' },
+  { name: 'خودسازی', slug: 'Self-Help' },
+  { name: 'فانتزی', slug: 'Fantasy' },
+];
 
 export default function Header() {
   const { getItemCount } = useCart();
@@ -15,7 +30,6 @@ export default function Header() {
     setHasMounted(true);
   }, []);
 
-  // Get itemCount after hasMounted is true to ensure client-side value
   const itemCount = hasMounted ? getItemCount() : 0;
 
   return (
@@ -24,18 +38,40 @@ export default function Header() {
         <Link href="/" className="text-2xl font-bold text-primary hover:text-primary/80 transition-colors">
           Ketab Online
         </Link>
-        <nav className="flex items-center space-x-4 rtl:space-x-reverse">
+        <nav className="flex items-center space-x-2 rtl:space-x-reverse">
           <Link href="/" passHref>
-            <Button 
-              variant="ghost" 
+            <Button
+              variant="ghost"
               className="text-card-foreground hover:text-primary hover:bg-primary/10 focus-visible:text-primary focus-visible:bg-primary/10 focus-visible:ring-1 focus-visible:ring-primary/70 transition-colors duration-150"
             >
               خانه
             </Button>
           </Link>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                className="text-card-foreground hover:text-primary hover:bg-primary/10 focus-visible:text-primary focus-visible:bg-primary/10 focus-visible:ring-1 focus-visible:ring-primary/70 transition-colors duration-150"
+              >
+                ژانرها
+                <ChevronDown className="me-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="bg-card text-card-foreground">
+              {genres.map((genre) => (
+                <DropdownMenuItem key={genre.slug} asChild>
+                  <Link href={`/genre/${genre.slug}`} className="hover:!bg-primary/20 focus:!bg-primary/20 w-full text-right">
+                    {genre.name}
+                  </Link>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           <Link href="/cart" passHref>
-            <Button 
-              variant="ghost" 
+            <Button
+              variant="ghost"
               className="relative text-card-foreground hover:text-primary hover:bg-primary/10 focus-visible:text-primary focus-visible:bg-primary/10 focus-visible:ring-1 focus-visible:ring-primary/70 transition-colors duration-150"
             >
               <ShoppingCart className="h-5 w-5" />
@@ -52,4 +88,3 @@ export default function Header() {
     </header>
   );
 }
-

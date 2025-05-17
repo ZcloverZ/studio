@@ -1,3 +1,4 @@
+
 'use client';
 
 import Image from 'next/image';
@@ -26,8 +27,8 @@ export default function CartItemCard({ item }: CartItemCardProps) {
           <Image
             src={item.coverImage}
             alt={`Cover of ${item.title}`}
-            layout="fill"
-            objectFit="contain"
+            fill={true} // Changed layout to fill
+            style={{ objectFit: 'contain' }} // Ensures image fits without cropping
             data-ai-hint={item.dataAiHint || "book cover"}
           />
         </div>

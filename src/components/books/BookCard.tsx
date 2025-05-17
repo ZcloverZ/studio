@@ -2,8 +2,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Book } from '@/lib/types';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import AddToCartButton from './AddToCartButton';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 
 interface BookCardProps {
   book: Book;
@@ -33,20 +32,9 @@ export default function BookCard({ book }: BookCardProps) {
             <CardDescription className="text-sm text-muted-foreground mb-2 line-clamp-1">{book.author}</CardDescription>
             <p className="text-primary font-bold text-lg">{book.price.toLocaleString('fa-IR', { style: 'currency', currency: 'IRR' }).replace('IRR', 'ریال')}</p>
           </CardContent>
-          <CardFooter className="p-4 pt-0 border-t-0"> {/* Removed border-t and CardFooter takes full width for button */}
-            {/* AddToCartButton is now part of the Card, clicking it will not navigate due to event propagation */}
-            {/* This is fine as the primary action is to add to cart, navigation via card click */}
-          </CardFooter>
+          {/* CardFooter and AddToCartButton removed as per design decision to have it on detail page */}
         </Card>
       </a>
     </Link>
   );
 }
-// Note: The AddToCartButton was previously inside CardFooter which itself was inside the Link.
-// For better user experience and to avoid nested interactive elements causing issues,
-// I've kept the AddToCartButton on the detail page.
-// If direct "Add to Cart" from BookCard is still desired, the CardFooter can be re-added
-// and event.stopPropagation() would be needed in AddToCartButton to prevent Link navigation.
-// However, for this iteration, clicking the card navigates to details, where "Add to Cart" is prominent.
-// I have now removed the AddToCartButton from the CardFooter on the BookCard to simplify and direct users to the detail page.
-// The price is moved to CardContent.

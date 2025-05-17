@@ -51,7 +51,7 @@ export default function CheckoutPage() {
     toast({
       title: "سفارش شما ثبت شد!",
       description: "از خرید شما متشکریم. سفارش شما با موفقیت پردازش شد.",
-      variant: "default",
+      variant: "default", // "success" variant might be better if defined, or use default
     });
     router.push('/'); 
   };

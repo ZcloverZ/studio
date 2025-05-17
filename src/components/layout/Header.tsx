@@ -2,8 +2,9 @@
 'use client';
 
 import Link from 'next/link';
-import { ShoppingCart, ChevronDown } from 'lucide-react';
+import { ShoppingCart, ChevronDown, Sun, Moon } from 'lucide-react'; // Added Sun and Moon icons
 import { useCart } from '@/contexts/CartContext';
+import { useTheme } from '@/contexts/ThemeContext'; // Added useTheme hook
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -24,6 +25,7 @@ const genres = [
 
 export default function Header() {
   const { getItemCount } = useCart();
+  const { theme, toggleTheme } = useTheme(); // Destructure theme and toggleTheme
   const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
@@ -38,7 +40,7 @@ export default function Header() {
         <Link href="/" className="text-2xl font-bold text-primary hover:text-primary/80 transition-colors">
           Ketab Online
         </Link>
-        <nav className="flex items-center space-x-2 rtl:space-x-reverse">
+        <nav className="flex items-center space-x-1 rtl:space-x-reverse"> {/* Reduced space for theme toggle */}
           <Link href="/" passHref>
             <Button
               variant="ghost"
@@ -73,6 +75,7 @@ export default function Header() {
             <Button
               variant="ghost"
               className="relative text-card-foreground hover:text-primary hover:bg-primary/10 focus-visible:text-primary focus-visible:bg-primary/10 focus-visible:ring-1 focus-visible:ring-primary/70 transition-colors duration-150"
+              aria-label="سبد خرید"
             >
               <ShoppingCart className="h-5 w-5" />
               {hasMounted && itemCount > 0 && (
@@ -83,6 +86,24 @@ export default function Header() {
               <span className="sr-only">سبد خرید</span>
             </Button>
           </Link>
+
+          {/* Theme Toggle Button */}
+          {hasMounted && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleTheme}
+              className="text-card-foreground hover:text-primary hover:bg-primary/10 focus-visible:text-primary focus-visible:bg-primary/10 focus-visible:ring-1 focus-visible:ring-primary/70 transition-colors duration-150 h-9 w-9" // Adjusted size to match other buttons better
+              aria-label={theme === 'light' ? "تغییر به تم تاریک" : "تغییر به تم روشن"}
+            >
+              {theme === 'light' ? (
+                <Moon className="h-5 w-5" />
+              ) : (
+                <Sun className="h-5 w-5" />
+              )}
+              <span className="sr-only">تغییر تم</span>
+            </Button>
+          )}
         </nav>
       </div>
     </header>

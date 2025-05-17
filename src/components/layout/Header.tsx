@@ -2,8 +2,8 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation'; // Added for search redirection
-import { ShoppingCart, ChevronDown, Sun, Moon, Menu, Home as HomeIcon, BookOpen, Search } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { ShoppingCart, ChevronDown, Sun, Moon, Menu, Home as HomeIcon, BookOpen } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { Button } from '@/components/ui/button';
@@ -27,7 +27,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import SearchBar from '@/components/books/SearchBar'; // Added SearchBar import
+import SearchBar from '@/components/books/SearchBar';
 import { useState, useEffect } from 'react';
 
 const genres = [
@@ -42,12 +42,24 @@ const genres = [
 export default function Header() {
   const { getItemCount } = useCart();
   const { theme, toggleTheme } = useTheme();
-  const router = useRouter(); // Added for search
+  const router = useRouter();
   const [hasMounted, setHasMounted] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
     setHasMounted(true);
+
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10); // Threshold of 10px
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Check scroll position on initial load
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   const itemCount = hasMounted ? getItemCount() : 0;
@@ -64,8 +76,8 @@ export default function Header() {
   const mobileNavIconClassName = "ms-3 h-5 w-5";
 
   return (
-    <header className="bg-background text-foreground shadow-md sticky top-0 z-50 border-b border-border">
-      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+    <header className={`bg-background text-foreground sticky top-0 z-50 border-b border-border transition-all duration-300 ${isScrolled ? 'shadow-lg' : 'shadow-md'}`}>
+      <div className={`container mx-auto px-4 flex justify-between items-center transition-[padding] duration-300 ${isScrolled ? 'py-2' : 'py-3'}`}>
         <Link href="/" className="text-2xl font-bold text-primary hover:text-primary/80 transition-colors">
           Ketab Online
         </Link>
@@ -104,7 +116,7 @@ export default function Header() {
 
         <div className="hidden md:flex items-center space-x-1 rtl:space-x-reverse">
            <Link href="/cart" passHref>
-            <Button variant="ghost" className={`relative ${navButtonClassName}`} aria-label="سبد خرید">
+            <Button variant="ghost" size="icon" className={`relative ${navButtonClassName}`} aria-label="سبد خرید">
               <ShoppingCart className="h-5 w-5" />
               {hasMounted && itemCount > 0 && (
                 <span className="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 bg-primary text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center">
@@ -120,7 +132,7 @@ export default function Header() {
               variant="ghost"
               size="icon"
               onClick={toggleTheme}
-              className={`${navButtonClassName} h-9 w-9`}
+              className={navButtonClassName}
               aria-label={theme === 'light' ? "تغییر به تم تاریک" : "تغییر به تم روشن"}
             >
               {theme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
@@ -132,7 +144,6 @@ export default function Header() {
 
         {/* Mobile Navigation Trigger */}
         <div className="md:hidden flex items-center space-x-2 rtl:space-x-reverse">
-            {/* Mobile Cart Icon */}
             <Link href="/cart" passHref>
                 <Button variant="ghost" size="icon" className={`relative ${navButtonClassName}`} aria-label="سبد خرید">
                 <ShoppingCart className="h-5 w-5" />
@@ -144,13 +155,12 @@ export default function Header() {
                 <span className="sr-only">سبد خرید</span>
                 </Button>
             </Link>
-            {/* Mobile Theme Toggle */}
             {hasMounted && (
                  <Button
                     variant="ghost"
                     size="icon"
                     onClick={toggleTheme}
-                    className={`${navButtonClassName} h-9 w-9`}
+                    className={navButtonClassName}
                     aria-label={theme === 'light' ? "تغییر به تم تاریک" : "تغییر به تم روشن"}
                 >
                     {theme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
@@ -159,7 +169,7 @@ export default function Header() {
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className={navButtonClassName}>
-                <Menu className="h-6 w-6" />
+                <Menu className="h-5 w-5" />
                 <span className="sr-only">باز کردن منو</span>
               </Button>
             </SheetTrigger>
@@ -198,10 +208,6 @@ export default function Header() {
                     </AccordionContent>
                   </AccordionItem>
                 </Accordion>
-
-                {/* Cart link is now outside mobile menu for direct access */}
-                {/* Theme toggle is now outside mobile menu for direct access */}
-
               </nav>
             </SheetContent>
           </Sheet>

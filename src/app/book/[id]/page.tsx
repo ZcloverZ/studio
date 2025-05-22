@@ -9,9 +9,7 @@ import { ArrowRight, BookOpen, FileText, Tag, Info, AlertTriangle, Sparkles } fr
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Skeleton } from '@/components/ui/skeleton';
 import dynamic from 'next/dynamic';
-
-const AddToCartButton = dynamic(() => import('@/components/books/AddToCartButton'), { ssr: false });
-const BookInsightsClient = dynamic(() => import('@/components/books/BookInsightsClient'), { ssr: false });
+import { BookActions } from '@/components/books/BookActions';
 
 export async function generateStaticParams() {
   return books.map((book) => ({
@@ -96,7 +94,7 @@ export default function BookDetailPage({ params }: { params: { id: string } }) {
             </div>
             
             <div className="mt-6">
-              <AddToCartButton book={book} />
+              <BookActions book={book} />
               <Link href="/cart" passHref>
                 <Button variant="outline" className="w-full mt-3">
                   مشاهده سبد خرید

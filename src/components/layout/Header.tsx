@@ -30,9 +30,8 @@ import SearchBar from '@/components/books/SearchBar';
 import { useState, useEffect, useRef } from 'react';
 import GenreMegaMenu from '@/components/books/GenreMegaMenu';
 import Image from 'next/image';
-import LogoImage from '@/components/layout/logo.jpg';
-import { useUser } from '@/contexts/UserContext';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { useUser } from '@/contexts/UserContext';
 
 const genres = [
   { name: 'داستانی', slug: 'Fiction' },
@@ -146,7 +145,7 @@ export default function Header() {
         <div className="flex-1 flex justify-center">
           <Link href="/" className="flex items-center gap-6 group focus:outline-none">
             <span className="inline-block transition-transform duration-200 group-hover:scale-110 group-focus:scale-110 drop-shadow-xl flex-shrink-0">
-              <Image src={LogoImage} alt="لوگو" width={64} height={64} className="rounded-lg shadow-lg object-cover" priority />
+              <Image src="/logo.jpg" alt="لوگو" width={64} height={64} className="rounded-lg shadow-lg object-cover" priority />
             </span>
             <span className="text-4xl font-black text-white tracking-tight drop-shadow-xl transition-colors group-hover:text-green-200 group-focus:text-green-200 select-none font-sans">سبز</span>
           </Link>

@@ -1,4 +1,4 @@
-import { getDb } from '../../../../lib/db';
+const { getDb } = require('../../../lib/db');
 const bcrypt = require('bcrypt');
 
 export async function POST(req) {

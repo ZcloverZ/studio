@@ -1,8 +1,18 @@
 {
   "version": 2,
+  "builds": [
+    { "src": "package.json", "use": "@vercel/next" }
+  ],
   "functions": {
+    "api/**/*.js": {
+      "includeFiles": ["books.db"]
+    },
     "src/app/api/**/*.js": {
       "includeFiles": ["books.db"]
     }
-  }
+  },
+  "routes": [
+    { "src": "/(.*)", "dest": "/src/app/$1" }
+  ],
+  "outputDirectory": ".next/standalone"
 } 

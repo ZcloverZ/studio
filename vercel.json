@@ -3,6 +3,5 @@
   "files": ["books.db"],
   "routes": [
     { "src": "/(.*)", "dest": "/src/app/$1" }
-  ],
-  "outputDirectory": ".next/standalone"
+  ]
 } 

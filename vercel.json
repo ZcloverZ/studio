@@ -1,7 +1,4 @@
 {
   "version": 2,
-  "files": ["books.db"],
-  "routes": [
-    { "src": "/(.*)", "dest": "/src/app/$1" }
-  ]
+  "files": ["books.db"]
 } 

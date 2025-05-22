@@ -1,13 +1,6 @@
 {
   "version": 2,
-  "functions": {
-    "api/**/*.js": {
-      "includeFiles": "books.db"
-    },
-    "src/app/api/**/*.js": {
-      "includeFiles": "books.db"
-    }
-  },
+  "files": ["books.db"],
   "routes": [
     { "src": "/(.*)", "dest": "/src/app/$1" }
   ],

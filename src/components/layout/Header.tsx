@@ -1,17 +1,16 @@
-
 'use client';
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ShoppingCart, ChevronDown, Sun, Moon, Menu, Home as HomeIcon, BookOpen } from 'lucide-react';
+import { ShoppingCart, ChevronDown, Sun, Moon, Menu, Home as HomeIcon, BookOpen, Book, Star, Globe, User } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
+  DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
   Sheet,
@@ -28,7 +27,12 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import SearchBar from '@/components/books/SearchBar';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import GenreMegaMenu from '@/components/books/GenreMegaMenu';
+import Image from 'next/image';
+import LogoImage from '@/components/layout/logo.jpg';
+import { useUser } from '@/contexts/UserContext';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
 const genres = [
   { name: 'داستانی', slug: 'Fiction' },
@@ -39,6 +43,34 @@ const genres = [
   { name: 'فانتزی', slug: 'Fantasy' },
 ];
 
+const genreGroups = [
+  {
+    title: 'داستانی',
+    icon: <BookOpen className="h-5 w-5 text-primary" />,
+    genres: [
+      { name: 'فانتزی', slug: 'Fantasy' },
+      { name: 'کلاسیک', slug: 'Classic' },
+      { name: 'ویران‌شهری', slug: 'Dystopian' },
+    ],
+  },
+  {
+    title: 'غیرداستانی',
+    icon: <Globe className="h-5 w-5 text-primary" />,
+    genres: [
+      { name: 'خودسازی', slug: 'Self-Help' },
+      { name: 'علمی', slug: 'Science' },
+    ],
+  },
+  {
+    title: 'محبوب',
+    icon: <Star className="h-5 w-5 text-yellow-400" />,
+    genres: [
+      { name: 'پرفروش', slug: 'Bestseller' },
+      { name: 'جدید', slug: 'New' },
+    ],
+  },
+];
+
 export default function Header() {
   const { getItemCount } = useCart();
   const { theme, toggleTheme } = useTheme();
@@ -46,12 +78,18 @@ export default function Header() {
   const [hasMounted, setHasMounted] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const progressRef = useRef<HTMLDivElement>(null);
+  const { user, logout } = useUser();
 
   useEffect(() => {
     setHasMounted(true);
 
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
+      const scrollTop = window.scrollY;
+      const docHeight = document.body.scrollHeight - window.innerHeight;
+      const percent = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+      if (progressRef.current) progressRef.current.style.width = percent + '%';
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -76,142 +114,105 @@ export default function Header() {
   const mobileNavIconClassName = "ms-3 h-5 w-5";
 
   return (
-    <header className={`bg-background text-foreground sticky top-0 z-50 border-b border-border transition-all duration-300 ${isScrolled ? 'shadow-lg' : 'shadow-md'}`}>
-      <div className={`container mx-auto px-4 flex justify-between items-center transition-[padding] duration-300 ${isScrolled ? 'py-2' : 'py-3'}`}>
-        <Link href="/" className="text-2xl font-bold text-primary hover:text-primary/80 transition-colors">
-          Ketab Online
-        </Link>
-
-        {/* Desktop Navigation & Search */}
-        <div className="hidden md:flex items-center space-x-1 rtl:space-x-reverse flex-grow justify-center">
-          <nav className="flex items-center space-x-1 rtl:space-x-reverse">
-            <Link href="/" passHref>
-              <Button variant="ghost" className={navButtonClassName}>
-                خانه
+    <header className={
+      `sticky top-0 z-50 transition-all duration-300 border-b border-green-900/40` +
+      ` bg-[#022d2bcc] backdrop-blur-xl shadow-[0_8px_32px_0_rgba(2,45,43,0.25)]`
+    }>
+      {/* Overlay for better contrast */}
+      <div className="absolute inset-0 z-0 bg-black/60 dark:bg-black/70 pointer-events-none" />
+      {/* Scroll progress bar */}
+      <div ref={progressRef} className="fixed top-0 right-0 left-0 h-1.5 z-[60] bg-gradient-to-l from-green-400 via-green-600 to-[#022d2b] rounded-b-full shadow-green-400/30 shadow-lg transition-all duration-200" style={{width:0}} />
+      <div className={`relative z-10 container mx-auto px-4 flex items-center justify-between transition-[padding] duration-300 ${isScrolled ? 'py-2' : 'py-6'}`}>
+        {/* Right: Hamburger menu for categories */}
+        <div className="flex items-center gap-2 min-w-[120px] justify-start">
+          <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="text-white hover:bg-green-900/30 h-12 w-12 shadow-green-400/20 shadow-lg">
+                <Menu className="h-7 w-7" />
+                <span className="sr-only">دسته‌بندی کتاب‌ها</span>
               </Button>
-            </Link>
-
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className={navButtonClassName}>
-                  ژانرها
-                  <ChevronDown className="me-2 h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="bg-card text-card-foreground">
-                {genres.map((genre) => (
-                  <DropdownMenuItem key={genre.slug} asChild>
-                    <Link href={`/genre/${genre.slug}`} className="hover:!bg-primary/20 focus:!bg-primary/20 w-full text-right">
-                      {genre.name}
-                    </Link>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </nav>
-          <div className="mx-4 flex-grow max-w-md">
-            <SearchBar onSearch={handleHeaderSearch} />
-          </div>
+            </SheetTrigger>
+            <SheetContent side="right" className="fixed inset-y-0 right-0 z-50 w-[90vw] max-w-sm bg-background/95 backdrop-blur-md flex flex-col p-0 animate-in fade-in slide-in-from-right duration-300">
+              <SheetHeader className="p-4 border-b shrink-0">
+                <SheetTitle className="text-xl text-primary text-right">دسته‌بندی کتاب‌ها</SheetTitle>
+              </SheetHeader>
+              <nav className="flex flex-col space-y-2 p-4 overflow-y-auto flex-grow">
+                <GenreMegaMenu />
+              </nav>
+            </SheetContent>
+          </Sheet>
         </div>
-
-        <div className="hidden md:flex items-center space-x-1 rtl:space-x-reverse">
-           <Link href="/cart" passHref>
-            <Button variant="ghost" size="icon" className={`relative ${navButtonClassName}`} aria-label="سبد خرید">
-              <ShoppingCart className="h-5 w-5" />
+        {/* Center: Logo */}
+        <div className="flex-1 flex justify-center">
+          <Link href="/" className="flex items-center gap-6 group focus:outline-none">
+            <span className="inline-block transition-transform duration-200 group-hover:scale-110 group-focus:scale-110 drop-shadow-xl flex-shrink-0">
+              <Image src={LogoImage} alt="لوگو" width={64} height={64} className="rounded-lg shadow-lg object-cover" priority />
+            </span>
+            <span className="text-4xl font-black text-white tracking-tight drop-shadow-xl transition-colors group-hover:text-green-200 group-focus:text-green-200 select-none font-sans">سبز</span>
+          </Link>
+        </div>
+        {/* Left: Theme toggle, Cart and User */}
+        <div className="flex items-center gap-3 min-w-[120px] justify-end">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-white hover:bg-green-900/30 h-12 w-12 shadow-green-400/20 shadow-lg"
+            aria-label={theme === 'dark' ? 'تغییر به تم روشن' : 'تغییر به تم تیره'}
+            title={theme === 'dark' ? 'تغییر به تم روشن' : 'تغییر به تم تیره'}
+            onClick={toggleTheme}
+          >
+            {theme === 'dark' ? <Sun className="h-7 w-7" /> : <Moon className="h-7 w-7" />}
+          </Button>
+          <Link href="/cart" passHref>
+            <Button variant="ghost" size="icon" className="relative text-white hover:bg-green-900/30 h-12 w-12 shadow-green-400/20 shadow-lg" aria-label="سبد خرید">
+              <ShoppingCart className="h-7 w-7" />
               {hasMounted && itemCount > 0 && (
-                <span className="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 bg-primary text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                <span className="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 bg-green-500 text-white text-xs rounded-full h-7 w-7 flex items-center justify-center border-2 border-white shadow-lg">
                   {itemCount.toLocaleString('fa-IR')}
                 </span>
               )}
               <span className="sr-only">سبد خرید</span>
             </Button>
           </Link>
-
-          {hasMounted && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleTheme}
-              className={navButtonClassName}
-              aria-label={theme === 'light' ? "تغییر به تم تاریک" : "تغییر به تم روشن"}
-            >
-              {theme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
-              <span className="sr-only">تغییر تم</span>
-            </Button>
-          )}
-        </div>
-
-
-        {/* Mobile Navigation Trigger & Content */}
-        <div className="md:hidden flex items-center space-x-2 rtl:space-x-reverse">
-            <Link href="/cart" passHref>
-                <Button variant="ghost" size="icon" className={`relative ${navButtonClassName} h-9 w-9`} aria-label="سبد خرید">
-                <ShoppingCart className="h-5 w-5" />
-                {hasMounted && itemCount > 0 && (
-                    <span className="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 bg-primary text-primary-foreground text-xs rounded-full h-4 w-4 flex items-center justify-center">
-                    {itemCount.toLocaleString('fa-IR')}
-                    </span>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="text-white hover:bg-green-900/30 h-12 w-12 shadow-green-400/20 shadow-lg" aria-label="حساب کاربری">
+                {user ? (
+                  <Avatar>
+                    <AvatarFallback>{user.username?.[0] || user.email?.[0] || 'U'}</AvatarFallback>
+                  </Avatar>
+                ) : (
+                  <User className="h-7 w-7" />
                 )}
-                <span className="sr-only">سبد خرید</span>
-                </Button>
-            </Link>
-            {hasMounted && (
-                 <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={toggleTheme}
-                    className={`${navButtonClassName} h-9 w-9`}
-                    aria-label={theme === 'light' ? "تغییر به تم تاریک" : "تغییر به تم روشن"}
-                >
-                    {theme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
-                </Button>
-            )}
-          <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className={`${navButtonClassName} h-9 w-9`}>
-                <Menu className="h-5 w-5" />
-                <span className="sr-only">باز کردن منو</span>
+                <span className="sr-only">حساب کاربری</span>
               </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-[280px] sm:w-[320px] bg-background p-0 flex flex-col">
-              <SheetHeader className="p-4 border-b shrink-0">
-                <SheetTitle className="text-xl text-primary text-right">منو</SheetTitle>
-              </SheetHeader>
-              
-              <div className="p-4 border-b shrink-0">
-                <SearchBar onSearch={handleHeaderSearch} />
-              </div>
-
-              <nav className="flex flex-col space-y-2 p-4 overflow-y-auto flex-grow">
-                <SheetClose asChild>
-                  <Link href="/" className={mobileNavLinkClassName}>
-                    <HomeIcon className={mobileNavIconClassName} />
-                    <span>خانه</span>
-                  </Link>
-                </SheetClose>
-
-                <Accordion type="single" collapsible className="w-full">
-                  <AccordionItem value="genres" className="border-b-0">
-                    <AccordionTrigger className={`${mobileNavLinkClassName} hover:no-underline justify-between`}>
-                       <div className="flex items-center">
-                        <BookOpen className={mobileNavIconClassName} />
-                        <span>ژانرها</span>
-                       </div>
-                    </AccordionTrigger>
-                    <AccordionContent className="pt-1 pe-3">
-                      {genres.map((genre) => (
-                        <SheetClose asChild key={genre.slug}>
-                          <Link href={`/genre/${genre.slug}`} className={`${mobileNavLinkClassName} text-base py-2 ps-8`}>
-                            {genre.name}
-                          </Link>
-                        </SheetClose>
-                      ))}
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-              </nav>
-            </SheetContent>
-          </Sheet>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {user ? (
+                <>
+                  <DropdownMenuItem disabled>
+                    {user.username || user.email}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={logout} className="text-red-600">
+                    خروج
+                  </DropdownMenuItem>
+                </>
+              ) : (
+                <>
+                  <DropdownMenuItem asChild>
+                    <Link href="/account">
+                      ورود / ثبت نام مشتریان
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/staff/login">
+                      ورود کارکنان
+                    </Link>
+                  </DropdownMenuItem>
+                </>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </header>

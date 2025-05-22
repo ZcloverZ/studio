@@ -1,4 +1,3 @@
-
 'use client';
 
 import Link from 'next/link';
@@ -43,7 +42,7 @@ export default function CartPage() {
 
       <Separator className="my-8" />
 
-      <Card className="shadow-xl">
+      <Card className="shadow-sm">
         <CardHeader>
           <CardTitle className="text-2xl">خلاصه سفارش</CardTitle>
         </CardHeader>

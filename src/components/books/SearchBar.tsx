@@ -26,10 +26,12 @@ export default function SearchBar({ onSearch, initialQuery = '' }: SearchBarProp
         value={query}
         onChange={handleInputChange}
         placeholder="جستجو بر اساس عنوان، نویسنده، یا شابک..."
-        className="ps-10 py-3 text-base rounded-lg shadow-sm"
+        className="ps-10 sm:ps-12 py-3 sm:py-4 text-base sm:text-lg rounded-2xl font-bold bg-card text-card-foreground placeholder:text-green-400 shadow-lg border-2 border-border focus:border-green-400 focus:ring-2 focus:ring-green-400/60 focus:bg-card transition-all duration-200 backdrop-blur-md hover:shadow-green-400/20"
         aria-label="جستجوی کتاب"
       />
-      <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+      <span className="absolute start-4 top-1/2 -translate-y-1/2 pointer-events-none">
+        <Search className="h-6 w-6 text-green-400 drop-shadow-lg" />
+      </span>
     </div>
   );
 }

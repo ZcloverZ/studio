@@ -1,4 +1,3 @@
-
 import type { Metadata } from 'next';
 import { Vazirmatn } from 'next/font/google';
 import './globals.css';
@@ -7,6 +6,7 @@ import Footer from '@/components/layout/Footer';
 import { CartProvider } from '@/contexts/CartContext';
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from '@/contexts/ThemeContext'; // Added ThemeProvider
+import { UserProvider } from '@/contexts/UserContext';
 
 const vazirmatn = Vazirmatn({
   subsets: ['latin', 'arabic'],
@@ -15,7 +15,7 @@ const vazirmatn = Vazirmatn({
 });
 
 export const metadata: Metadata = {
-  title: 'Ketab Online',
+  title: 'سبز',
   description: 'Your online bookstore for discovering and purchasing books.',
 };
 
@@ -27,18 +27,20 @@ export default function RootLayout({
   return (
     <html lang="fa" dir="rtl" className={vazirmatn.variable}>
       <body className={`font-sans antialiased`}>
-        <ThemeProvider> {/* Wrapped with ThemeProvider */}
-          <CartProvider>
-            <div className="flex flex-col min-h-screen bg-background">
-              <Header />
-              <main className="flex-grow container mx-auto px-4 py-8">
-                {children}
-              </main>
-              <Footer />
-            </div>
-            <Toaster />
-          </CartProvider>
-        </ThemeProvider>
+        <UserProvider>
+          <ThemeProvider>
+            <CartProvider>
+              <div className="flex flex-col min-h-screen bg-background">
+                <Header />
+                <main className="flex-grow container mx-auto px-4 py-8">
+                  {children}
+                </main>
+                <Footer />
+              </div>
+              <Toaster />
+            </CartProvider>
+          </ThemeProvider>
+        </UserProvider>
       </body>
     </html>
   );

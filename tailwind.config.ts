@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 import { fontFamily as defaultFontFamily } from "tailwindcss/defaultTheme";
 
@@ -65,7 +64,8 @@ export default {
   				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
   				border: 'hsl(var(--sidebar-border))',
   				ring: 'hsl(var(--sidebar-ring))'
-  			}
+  			},
+  			skeleton: 'hsl(var(--skeleton))',
   		},
   		borderRadius: {
   			lg: 'var(--radius)',
@@ -93,7 +93,10 @@ export default {
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
   			'accordion-up': 'accordion-up 0.2s ease-out'
-  		}
+  		},
+  		backgroundImage: {
+  			'green-gradient': 'linear-gradient(90deg, #022d2b 0%, #22c55e 100%)',
+  		},
   	}
   },
   plugins: [require("tailwindcss-animate")],

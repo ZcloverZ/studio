@@ -1,20 +1,17 @@
-
-'use client'; // Add this to ensure useEffect and useState can be used
-
-import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { books } from '@/lib/data';
 import type { Book } from '@/lib/types';
-import AddToCartButton from '@/components/books/AddToCartButton';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { ArrowRight, BookOpen, FileText, Tag, Info, AlertTriangle, Sparkles } from 'lucide-react';
-import { generateBookInsights } from '@/ai/flows/book-insights-flow';
-import type { BookInsightsOutput } from '@/ai/flows/book-insights-flow';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Skeleton } from '@/components/ui/skeleton';
+import dynamic from 'next/dynamic';
+
+const AddToCartButton = dynamic(() => import('@/components/books/AddToCartButton'), { ssr: false });
+const BookInsightsClient = dynamic(() => import('@/components/books/BookInsightsClient'), { ssr: false });
 
 export async function generateStaticParams() {
   return books.map((book) => ({
@@ -24,32 +21,6 @@ export async function generateStaticParams() {
 
 export default function BookDetailPage({ params }: { params: { id: string } }) {
   const book: Book | undefined = books.find(b => b.id === params.id);
-  const [insights, setInsights] = useState<BookInsightsOutput | null>(null);
-  const [insightsLoading, setInsightsLoading] = useState(false);
-  const [insightsError, setInsightsError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (book) {
-      async function fetchInsights() {
-        setInsightsLoading(true);
-        setInsightsError(null);
-        try {
-          const result = await generateBookInsights({
-            title: book.title,
-            author: book.author,
-            description: book.description,
-          });
-          setInsights(result);
-        } catch (error) {
-          console.error("Error fetching book insights:", error);
-          setInsightsError("متاسفانه در دریافت تحلیل هوشمند کتاب خطایی رخ داد.");
-        } finally {
-          setInsightsLoading(false);
-        }
-      }
-      fetchInsights();
-    }
-  }, [book]);
 
   if (!book) {
     return (
@@ -71,7 +42,7 @@ export default function BookDetailPage({ params }: { params: { id: string } }) {
 
   return (
     <div className="container mx-auto max-w-4xl py-8 px-4">
-      <Card className="overflow-hidden shadow-2xl">
+      <Card className="overflow-hidden shadow-sm">
         <div className="grid md:grid-cols-2 gap-0">
           <div className="relative h-96 md:h-auto min-h-[300px] bg-muted/30 flex items-center justify-center p-4 md:p-8">
             <Image
@@ -137,7 +108,7 @@ export default function BookDetailPage({ params }: { params: { id: string } }) {
       </Card>
 
       {/* AI Insights Section */}
-      <Card className="mt-10 shadow-xl rounded-lg">
+      <Card className="mt-10 shadow-sm rounded-lg">
         <CardHeader>
           <CardTitle className="flex items-center text-2xl font-semibold text-primary">
             <Sparkles className="ms-2 h-6 w-6" />
@@ -145,45 +116,30 @@ export default function BookDetailPage({ params }: { params: { id: string } }) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {insightsLoading && (
-            <div className="space-y-4 py-4">
-              <Skeleton className="h-6 w-1/3 mb-2" />
-              <Skeleton className="h-4 w-full" />
-              <Skeleton className="h-4 w-5/6" />
-              <Skeleton className="h-4 w-full" />
-              <Separator className="my-4" />
-              <Skeleton className="h-6 w-1/4 mb-2" />
-              <Skeleton className="h-4 w-full" />
-              <Skeleton className="h-4 w-2/3" />
-            </div>
-          )}
-          {insightsError && <p className="text-destructive text-center py-4">{insightsError}</p>}
-          {insights && !insightsLoading && !insightsError && (
-            <Accordion type="single" collapsible defaultValue="item-1" className="w-full">
-              <AccordionItem value="item-1">
-                <AccordionTrigger className="text-xl hover:no-underline">خلاصه کتاب</AccordionTrigger>
-                <AccordionContent className="pt-2 text-base leading-relaxed text-foreground/80 text-justify">
-                  {insights.summary}
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="item-2">
-                <AccordionTrigger className="text-xl hover:no-underline">موضوعات کلیدی</AccordionTrigger>
-                <AccordionContent className="pt-2">
-                  <ul className="list-disc list-inside space-y-1 text-base text-foreground/80">
-                    {insights.keyThemes.map((theme, index) => (
-                      <li key={index}>{theme}</li>
-                    ))}
-                  </ul>
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="item-3">
-                <AccordionTrigger className="text-xl hover:no-underline">مخاطب هدف</AccordionTrigger>
-                <AccordionContent className="pt-2 text-base leading-relaxed text-foreground/80 text-justify">
-                  {insights.targetAudience}
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          )}
+          <Accordion type="single" collapsible defaultValue="item-1" className="w-full">
+            <AccordionItem value="item-1">
+              <AccordionTrigger className="text-xl hover:no-underline">خلاصه کتاب</AccordionTrigger>
+              <AccordionContent className="pt-2 text-base leading-relaxed text-foreground/80 text-justify">
+                {book.insights?.summary}
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-2">
+              <AccordionTrigger className="text-xl hover:no-underline">موضوعات کلیدی</AccordionTrigger>
+              <AccordionContent className="pt-2">
+                <ul className="list-disc list-inside space-y-1 text-base text-foreground/80">
+                  {book.insights?.keyThemes.map((theme, index) => (
+                    <li key={index}>{theme}</li>
+                  ))}
+                </ul>
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-3">
+              <AccordionTrigger className="text-xl hover:no-underline">مخاطب هدف</AccordionTrigger>
+              <AccordionContent className="pt-2 text-base leading-relaxed text-foreground/80 text-justify">
+                {book.insights?.targetAudience}
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </CardContent>
       </Card>
 

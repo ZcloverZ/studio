@@ -7,6 +7,7 @@ import { CartProvider } from '@/contexts/CartContext';
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from '@/contexts/ThemeContext'; // Added ThemeProvider
 import { UserProvider } from '@/contexts/UserContext';
+import { Analytics } from '@vercel/analytics/react';
 
 const vazirmatn = Vazirmatn({
   subsets: ['latin', 'arabic'],
@@ -41,6 +42,7 @@ export default function RootLayout({
             </CartProvider>
           </ThemeProvider>
         </UserProvider>
+        <Analytics />
       </body>
     </html>
   );

@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from '@/contexts/ThemeContext'; // Added ThemeProvider
 import { UserProvider } from '@/contexts/UserContext';
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const vazirmatn = Vazirmatn({
   subsets: ['latin', 'arabic'],
@@ -43,6 +44,7 @@ export default function RootLayout({
           </ThemeProvider>
         </UserProvider>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

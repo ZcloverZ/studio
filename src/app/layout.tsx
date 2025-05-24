@@ -19,6 +19,30 @@ const vazirmatn = Vazirmatn({
 export const metadata: Metadata = {
   title: 'سبز',
   description: 'Your online bookstore for discovering and purchasing books.',
+  icons: {
+    icon: "/logo.jpg", // Used for general favicons
+    apple: "/logo.jpg", // Used for Apple touch icons
+  },
+  openGraph: {
+    title: 'سبز',
+    description: 'Your online bookstore for discovering and purchasing books.',
+    images: [
+      {
+        url: "/logo.jpg", // Main Open Graph image
+        width: 1200, // Recommended width for OG images
+        height: 630, // Recommended height for OG images
+        alt: 'لوگو سبز',
+      },
+    ],
+    locale: 'fa_IR',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'سبز',
+    description: 'Your online bookstore for discovering and purchasing books.',
+    images: ["/logo.jpg"], // Twitter card image
+  },
 };
 
 export default function RootLayout({

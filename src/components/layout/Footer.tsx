@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 export default function Footer() {
   return (
     <footer className="relative bg-[#022d2bcc] backdrop-blur-xl border-t-4 border-green-500/70 shadow-[0_-8px_32px_0_rgba(2,45,43,0.15)] mt-16 rounded-t-3xl overflow-hidden">
@@ -5,17 +7,7 @@ export default function Footer() {
       <div className="container mx-auto px-4 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="flex items-center gap-3">
           <span className="inline-block">
-            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="4" y="8" width="28" height="20" rx="7" fill="url(#footerGreenGrad)" />
-              <path d="M18 12 Q25 15 18 20 Q11 25 18 28" stroke="#a7f3d0" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-              <ellipse cx="25" cy="13" rx="2.2" ry="1.1" fill="#22c55e" transform="rotate(-20 25 13)" />
-              <defs>
-                <linearGradient id="footerGreenGrad" x1="4" y1="8" x2="32" y2="28" gradientUnits="userSpaceOnUse">
-                  <stop stopColor="#022d2b" />
-                  <stop offset="1" stopColor="#22c55e" />
-                </linearGradient>
-              </defs>
-            </svg>
+            <Image src="/logo.jpg" alt="لوگو سبز" width={36} height={36} className="" />
           </span>
           <span className="text-2xl font-black text-white tracking-tight drop-shadow-lg select-none font-sans">سبز</span>
         </div>

@@ -18,15 +18,15 @@
     --popover-gradient: linear-gradient(135deg, #f6fef9 60%, #bbf7d0 100%);
     --popover-shadow: 0 4px 32px 0 #bbf7d033;
 
-    --primary: 160 84% 39%;             /* #22c55e - Saturated Green */
+    --primary: 160 80% 30%;             /* #108554 - Deep Green (for contrast) */
     --primary-foreground: 0 0% 100%;    /* #FFFFFF */
 
     --destructive: 0 84.2% 60.2%;       /* #EF4444 */
     --destructive-foreground: 0 0% 98%; /* #FEF2F2 */
 
-    --border: 142 40% 85%;              /* #bbf7d0 - Light green border */
-    --input: 142 40% 85%;               /* #bbf7d0 */
-    --ring: 142 71% 80%;                /* #a7f3d0 - Light Green */
+    --border: 142 35% 55%;              /* #6ba97e - Medium green border (for visibility) */
+    --input: 142 35% 55%;               /* #6ba97e */
+    --ring: 160 80% 30%;                /* #108554 - Primary Green (for focus visibility) */
     --skeleton: 142 40% 96%;            /* #f0fdf4 */
 
     --radius: 1rem;
@@ -64,7 +64,7 @@
     --ring: 160 84% 39%;             /* #22c55e */
     --skeleton: 170 94% 13%;         /* #033c37 */
 
-    --radius: 0.25rem;
+    --radius: 1rem;
 
     /* Unified chart colors (Indigo family) */
     --chart-1: 217 90% 75%;           /* Indigo 300 */
